@@ -5,8 +5,8 @@ import com.tpe.domain.Urun;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SepetService {
 
@@ -15,6 +15,7 @@ public class SepetService {
     // Statik Listeler
     public static List<Urun> sepetList = new ArrayList<>();
     public static List<Urun> urunList = new ArrayList<>();
+
 
     // Sepete Ürün Ekleme
     public static List<Urun> addToCart(Map<String, Urun> producta, List<Urun> cart) {
@@ -106,44 +107,80 @@ public class SepetService {
         return products;
     }
 
-    public static void sortAndRemoveAorZ1(List<Urun> nums) {
-        // "A" ile başlayan veya "Z" ile biten ürünleri kaldır
-        //nums.removeIf(product -> product.getÜrünAdı().startsWith("A") || product.getÜrünAdı().endsWith("Z"));
+    public static void sepeteEkle(Urun urun, List<Urun> cart) {
+        if (urun != null) {
+            cart.add(urun);
+            System.out.println("Ürün sepete eklendi: " + urun.getÜrünAdı());
+        } else {
+            System.out.println("Null bir ürün sepete eklenemez.");
+        }
+    }
 
-        // A'dan Z'ye sıralama (ürün adlarına göre)
-        List<Urun> sıralıListe = nums.stream()
-                .sorted(Comparator.comparing(Urun::getÜrünAdı))
-                .collect(Collectors.toList());
+    public static void saveToFile(List<Urun> cart, List<Urun> cart1) {
+        try (FileWriter writer = new FileWriter("sepet.txt")) {
+            System.out.println("Dosya yazmaya başlıyor...");
 
-        System.out.println("A'dan Z'ye sıralanmış ürünler: " + sıralıListe);
+            for (Urun item : cart) {
+                if (item != null) {
+                    writer.write(item.getÜrünKodu() + " - " +
+                            item.getÜrünAdı() + " - " +
+                            item.getStokDurumu() + "\n");
+                    System.out.println("Yazılan ürün: " + item.getÜrünAdı());
+                }
+            }
 
-        // Alfabetik olarak ilk sıradaki ürün(ler)in adını bulma
-        String minÜrünAdı = nums.stream()
-                .map(Urun::getÜrünAdı)
-                .min(String::compareTo)
-                .orElseThrow(() -> new NoSuchElementException("Liste boş!"));
+            for (Urun item : cart1) {
+                if (item != null) {
+                    writer.write(item.getÜrünKodu() + " - " +
+                            item.getÜrünAdı() + " - " +
+                            item.getStokDurumu() + "\n");
+                    System.out.println("Sepetten yazılan ürün: " + item.getÜrünAdı());
+                }
+            }
 
-        // En küçük ada sahip ürün(ler)i yazdırma
-        nums.stream()
-                .filter(product -> product.getÜrünAdı().equals(minÜrünAdı)) // Ürün adını eşleşmeye göre filtrele
-                .forEach(product -> {
-                    System.err.println("\nÜrün Kodu: " + product.getÜrünKodu() +
-                            "\nÜrün Adı: " + product.getÜrünAdı() +
-                            "\nFiyat: " + product.getFiyat() +
-                            "\nKategori: " + product.getKategori()+
-                            "\nBeden: " +product.getBeden()+
-                            "\nRenk:"+product.getRenk()+
-                            "\nMalzeme"+product.getMalzeme()+
-                            "\nKol Tipi"+product.getKolTipi()+
-                            "\nBoy Uzunlugu"+product.getBoyUzunlugu()+
-                            "\nÜretici"+product.getUretici()+
-                            "\nStok Durumu"+product.getStokDurumu()+
-                            "\n");
-                });
+            System.out.println("Sepet dosyaya başarıyla kaydedildi.");
+        } catch (IOException e) {
+            System.out.println("Sepeti dosyaya kaydederken bir hata oluştu: " + e.getMessage());
+        }
+
+    }
+    // Sepeti Dosyaya Kaydetme
+    public static void saveToFile1(List<Urun> cart, List<Urun> cart1) {
+        try (FileWriter writer = new FileWriter("sepet.txt")) {
+            System.out.println("Dosya yazmaya başlıyor...");
+
+            // Ürünleri yazdır (cart)
+            for (Urun item : cart) {
+                if (item != null) { // Null kontrolü
+                    writer.write(item.getÜrünKodu() + " - " +
+                            item.getÜrünAdı() + " - " +
+                            item.getStokDurumu() + "\n");
+                    System.out.println("Yazılan ürün: " + item.getÜrünAdı());
+                } else {
+                    System.out.println("Cart içinde null ürün atlandı.");
+                }
+            }
+
+            // Sepetteki ürünleri yazdır (cart1)
+            for (Urun item : cart1) {
+                if (item != null) { // Null kontrolü
+                    writer.write(item.getÜrünKodu() + " - " +
+                            item.getÜrünAdı() + " - " +
+                            item.getMiktar() + "\n");
+                    System.out.println("Sepetten yazılan ürün: " + item.getÜrünAdı());
+                } else {
+                    System.out.println("Cart1 içinde null ürün atlandı.");
+                }
+            }
+
+            System.out.println("Sepet dosyaya başarıyla kaydedildi.");
+        } catch (IOException e) {
+            System.out.println("Sepeti dosyaya kaydederken bir hata oluştu: " + e.getMessage());
+        }
     }
 
     // Sepeti Dosyaya Kaydetme
-    public static void saveToFile(List<Urun> cart, List<Urun> cart1) {
+    public static void saveToFile11(List<Urun> cart, List<Urun> cart1) {
         try (FileWriter writer = new FileWriter("sepet.txt")) {
             System.out.println("Dosya yazmaya başlıyor...");
 
@@ -192,14 +229,14 @@ public class SepetService {
     }
 
     // Sepeti Listeleme
-    public static void listCart(List<Urun> cart) {
+    public static boolean listCart(List<Urun> cart) {
         System.out.println("Sepetinizdeki ürünler:");
         System.out.printf("%-20s %-20s %-15s %-10s %-10s%n", "ÜRÜN ID", "ÜRÜN ADI", "MİKTAR", "FİYAT", "TOPLAM");
         System.out.printf("%-20s %-20s %-15s %-10s %-10s%n", "-------", "--------", "------", "-----", "------");
 
         if (cart.isEmpty()) {
             System.out.println("Sepetiniz boş.");
-            return;
+            return false;
         }
 
         for (Urun item : cart) {
@@ -211,8 +248,178 @@ public class SepetService {
                     item.getFiyat(),
                     total);
         }
+        return false;
     }
-}
+
+    // System.out.println("6-Kargo secimi ve ödeme secenekleri");
+
+    /*//satış
+    private LocalDateTime tarih;
+    private String Tamamlandı;
+    private String krediCart;
+    private String kapıdaOdeme;
+    private String faturaBilgileri;
+
+    //kargo
+    private String kargoTakipNo;
+    private String teslimatSüresi;
+    private String kargoUcreti;
+    private String yurtici;
+    private String yurtdısı;
+    private String kargoDurumu;*/
+
+    public SepetService() {
+    }
+
+    private Sepet sepet; // Sepet nesnesini yönetecek
+
+        // Constructor
+        public SepetService(Sepet sepet) {
+            this.sepet = sepet;
+        }
+
+        // Kredi Kartı ile Ödeme
+        public void krediKartiIleOdeme(String krediKartBilgisi, String faturaBilgileri) {
+            sepet.setKrediCart(krediKartBilgisi);
+            sepet.setFaturaBilgileri(faturaBilgileri);
+            sepet.setTamamlandı("Evet");
+            System.out.println("Kredi Kartı ile ödeme tamamlandı.");
+        }
+
+        // Kapıda Ödeme
+        public void kapidaOdeme(String faturaBilgileri) {
+            sepet.setKapıdaOdeme("Kapıda Ödeme Seçildi");
+            sepet.setFaturaBilgileri(faturaBilgileri);
+            sepet.setTamamlandı("Evet");
+            System.out.println("Kapıda ödeme seçildi ve işlem tamamlandı.");
+        }
+
+        // Satış Bilgilerini Görüntüle
+        public void satisBilgileriniGoster() {
+            System.out.println("Satış Tarihi: " + sepet.getTarih());
+            System.out.println("Tamamlandı: " + sepet.getTamamlandı());
+            System.out.println("Kredi Kartı: " + sepet.getKrediCart());
+            System.out.println("Kapıda Ödeme: " + sepet.getKapıdaOdeme());
+            System.out.println("Fatura Bilgileri: " + sepet.getFaturaBilgileri());
+        }
+    ///System.out.println("5- Satın alınan ürünleri görüntüleme ve kargoya verme");
+
+
+
+
+
+
+
+    /*///  admin kısmı
+    public void kargoIslemleri(String secim, String deger) {
+        switch (secim.toLowerCase()) {
+            case "kargo takip no":
+                String takipNo = UUID.randomUUID().toString();
+                sepet.setKargoTakipNo(takipNo);
+                System.out.println("Kargo Takip Numarası oluşturuldu: " + takipNo);
+                break;
+
+            case "teslimat süresi":
+                sepet.setTeslimatSüresi(deger);
+                System.out.println("Teslimat süresi belirlendi: " + deger);
+                break;
+
+            case "kargo ücreti":
+                sepet.setKargoUcreti(deger);
+                System.out.println("Kargo ücreti belirlendi: " + deger);
+                break;
+
+            case "yurtiçi":
+                sepet.setYurtici("Yurtiçi Kargo");
+                sepet.setYurtdısı(null);
+                System.out.println("Kargo türü yurtiçi olarak belirlendi.");
+                break;
+
+            case "yurtdışı":
+                sepet.setYurtdısı("Yurtdışı Kargo");
+                sepet.setYurtici(null);
+                System.out.println("Kargo türü yurtdışı olarak belirlendi.");
+                break;
+
+            case "kargo durumu":
+                sepet.setKargoDurumu(deger);
+                System.out.println("Kargo durumu güncellendi: " + deger);
+                break;
+
+            default:
+                System.out.println("Geçersiz bir işlem seçildi: " + secim);
+        }
+    }
+
+     */
+
+        // Kargo İşlemleri
+
+        // Kargo Takip Numarası Oluştur
+        public void kargoTakipNoOlustur() {
+            String takipNo = UUID.randomUUID().toString();
+            sepet.setKargoTakipNo(takipNo);
+            System.out.println("Kargo Takip Numarası: " + takipNo);
+        }
+
+        // Teslimat Süresi Belirle
+        public void teslimatSuresiBelirle(String teslimatSuresi) {
+            sepet.setTeslimatSüresi(teslimatSuresi);
+            System.out.println("Teslimat süresi belirlendi: " + teslimatSuresi);
+        }
+
+        // Kargo Ücreti Belirle
+        public void kargoUcretiBelirle(String ucret) {
+            sepet.setKargoUcreti(ucret);
+            System.out.println("Kargo ücreti belirlendi: " + ucret);
+        }
+
+        // Yurtiçi veya Yurtdışı Kargo Belirle
+        public void kargoKonumuBelirle(boolean yurtiçi) {
+            if (yurtiçi) {
+                sepet.setYurtici("Yurtiçi Kargo");
+                sepet.setYurtdısı(null);
+            } else {
+                sepet.setYurtdısı("Yurtdışı Kargo");
+                sepet.setYurtici(null);
+            }
+            System.out.println("Kargo konumu belirlendi: " + (yurtiçi ? "Yurtiçi" : "Yurtdışı"));
+        }
+
+        // Kargo Durumu Güncelle
+        public void kargoDurumuGuncelle(String durum) {
+            sepet.setKargoDurumu(durum);
+            System.out.println("Kargo durumu güncellendi: " + durum);
+        }
+
+        // Satış ve Kargo Bilgilerini Görüntüle
+        public void satisVeKargoBilgileriniGoster() {
+            System.out.println("Satış Bilgileri:");
+            System.out.println("Tamamlandı: " + sepet.getTamamlandı());
+            System.out.println("Kredi Kartı: " + sepet.getKrediCart());
+            System.out.println("Kapıda Ödeme: " + sepet.getKapıdaOdeme());
+            System.out.println("Fatura Bilgileri: " + sepet.getFaturaBilgileri());
+
+            System.out.println("\nKargo Bilgileri:");
+            System.out.println("Kargo Takip No: " + sepet.getKargoTakipNo());
+            System.out.println("Teslimat Süresi: " + sepet.getTeslimatSüresi());
+            System.out.println("Kargo Ücreti: " + sepet.getKargoUcreti());
+            System.out.println("Yurtiçi: " + sepet.getYurtici());
+            System.out.println("Yurtdışı: " + sepet.getYurtdısı());
+            System.out.println("Kargo Durumu: " + sepet.getKargoDurumu());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

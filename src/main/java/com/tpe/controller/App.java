@@ -142,6 +142,7 @@ public class App {
                     break;
                 case 6:
                     System.out.println("5- Satın alınan ürünleri görüntüleme ve kargoya verme");
+                    kargoIslemleri(deger,deger);
                     // Implement satın alma işlemi burada
                     break;
                 case 7:
@@ -158,7 +159,58 @@ public class App {
         }
     }
 
+    public static Sepet sepet;
+    public static String deger;
+    public static void kargoIslemleri(String secim, String deger) {
+        boolean isExist = false;
 
+        while (!isExist) {
+            System.out.println("========================================================");
+            switch (secim.toLowerCase()) {
+                case "kargo takip no":
+                    String takipNo = UUID.randomUUID().toString();
+
+                    sepet.setKargoTakipNo(takipNo);
+                    System.out.println("Kargo Takip Numarası oluşturuldu: " + takipNo);
+                    break;
+
+                case "teslimat süresi":
+                    sepet.setTeslimatSüresi(deger);
+                    System.out.println("Teslimat süresi belirlendi: " + deger);
+                    break;
+
+                case "kargo ücreti":
+                    sepet.setKargoUcreti(deger);
+                   System.out.println("Kargo ücreti belirlendi: " + deger);
+                   break;
+
+               case "yurtiçi":
+                   sepet.setYurtici("Yurtiçi Kargo");
+                   sepet.setYurtdısı(null);
+                   System.out.println("Kargo türü yurtiçi olarak belirlendi.");
+                   break;
+
+               case "yurtdışı":
+                   sepet.setYurtdısı("Yurtdışı Kargo");
+                   sepet.setYurtici(null);
+                   System.out.println("Kargo türü yurtdışı olarak belirlendi.");
+                   break;
+
+               case "kargo durumu":
+                   sepet.setKargoDurumu(deger);
+                System.out.println("Kargo durumu güncellendi: " + deger);
+                break;
+               case "satıs durumunu görüntüleme":
+                   sepetService.satisVeKargoBilgileriniGoster();
+                   break;
+               case "false":
+                    System.out.println("Good bye...");
+                    break;
+            default:
+                System.out.println("Geçersiz bir işlem seçildi: " + secim);
+            }
+        }//yani sepetServiceden cağrıcaz düzenleme gerekli
+    }
 
             public static void MüsteriIslemleriMethod(){
                 boolean isExist=false;
@@ -208,6 +260,7 @@ public class App {
                             // Kullanıcıdan ID al
                             System.out.println(products);
                            List<Urun>list= SepetService.addToCart(products,SepetService.sepetList);
+                           SepetService.sepeteEkle(urun,SepetService.urunList);
                             SepetService.saveToFile(SepetService.urunList,list);
                             SepetService.listUnaddedProducts(SepetService.urunList,SepetService.sepetList);
                             SepetService.listCart(list);
@@ -216,21 +269,14 @@ public class App {
 
                         case 6:
                             System.out.println("6-Kargo secimi ve ödeme secenekleri");
-
+                            OdemeVeKargoKısmı();
                             break;
                         case 7:
                             System.out.println("7-Urun iptal ve Urun iade");
 
                             break;
+
                         case 8:
-                            System.out.println("8-Siparis Tamamlama ve Odeme Islemleri");
-
-                            break;
-                        case 9:
-                            System.out.println("8-Siparis Tamamlama ve Odeme Islemleri");
-
-                            break;
-                        case 10:
                             System.out.println("10-Urun degerlendirme ve yorum");
 
                             break;
@@ -248,6 +294,66 @@ public class App {
                 }
 
             }
+            public static SepetService sepetService = new SepetService();
+            public static void OdemeVeKargoKısmı(){
+                boolean isExist = false;
+                while (!isExist) {
+                    System.out.println("========================================================");
+                    System.out.println("1-krediCart ile Ödeme işlemleri: ");
+                    System.out.println("2-kapıda ödeme ile Ödeme işlemleri: ");
+                    System.out.println("3-Satıs bilgilerini görüntüleme: ");
+                    System.out.println("4-yurtici kargo secenegi: ");
+                    System.out.println("5-yurtdısı kargo secenegi: ");
+                    System.out.println("6-kargo durumugu görüntüleme: ");
+                    System.out.println("0-ÇIKIŞ");
+
+                    int select = input.nextInt();
+                    input.nextLine();
+
+                    switch (select) {
+                        case 1:
+                            System.out.println("1-krediCart ile Ödeme işlemleri: ");
+                            sepetService.krediKartiIleOdeme(deger,deger);
+                            break;
+
+                        case 2:
+                            System.out.println("2-kapıda ödeme ile Ödeme işlemleri: ");
+                            sepetService.kapidaOdeme(deger);
+                            break;
+                        case 3:
+                            System.out.println("3-satıs Bilgilerini görüntüleme: ");
+                            sepetService.satisBilgileriniGoster();
+                            break;
+
+                        case 4:
+                            System.out.println("4-yurtici kargo secenegi: ");
+
+                            break;
+                        case 5:
+                            System.out.println("5-yurtdısı kargo secenegi: ");
+
+                            break;
+                        case 6:
+                            System.out.println("6-kargo durumugu görüntüleme: ");
+
+                            break;
+
+                        case 0:
+                            isExist = true;
+
+                            System.out.println("İyi Günler...");
+                            break;
+
+                        default:
+                            System.out.println("Hatalı giriş!!!");
+                            break;
+                    }
+                }
+
+            }
+
+
+
             public static void MisafirIslemleriMethod () {
                 boolean isExist = false;
                 while (!isExist) {

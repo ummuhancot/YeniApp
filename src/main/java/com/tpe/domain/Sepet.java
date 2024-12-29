@@ -1,5 +1,6 @@
 package com.tpe.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /*Sepet İşlemleri:
@@ -9,15 +10,15 @@ Sepete Eklenen Miktar (Cart Quantity): Kullanıcının sepete eklediği ürün m
 Sepet ID (Cart ID): Sepeti benzersiz şekilde tanımlayan ID.
 
 Örn: Kullanıcının farklı sepet oturumlarını izlemek için kullanılabilir.*/
-public class Sepet <T>{
+public class Sepet {
 
     //sepet
     private static List<Urun> products;
     public Urun urun;
     private static int miktar;
     //satış
-    private String tarih;
-    private String satisDurumu;
+
+    private LocalDateTime tarih;
     private String Tamamlandı;
     private String krediCart;
     private String kapıdaOdeme;
@@ -30,6 +31,8 @@ public class Sepet <T>{
     private String yurtici;
     private String yurtdısı;
     private String kargoDurumu;
+
+
 
     public Sepet(Urun urun, int miktar) {
     }
@@ -53,10 +56,9 @@ public class Sepet <T>{
     public Sepet() {
     }
 
-    public Sepet(String ürünAdı, String kategori, Integer fiyat, String beden, String renk, String malzeme, String kolTipi, Integer boyUzunlugu, int stokDurumu, String uretici, String tarih, String satisDurumu, String tamamlandı, String krediCart, String kapıdaOdeme, String faturaBilgileri, String kargoTakipNo, String teslimatSüresi, String kargoUcreti, String yurtici, String yurtdısı, String kargoDurumu) {
+    public Sepet(String ürünAdı, String kategori, Integer fiyat, String beden, String renk, String malzeme, String kolTipi, Integer boyUzunlugu, int stokDurumu, String uretici, LocalDateTime tarih,String tamamlandı, String krediCart, String kapıdaOdeme, String faturaBilgileri, String kargoTakipNo, String teslimatSüresi, String kargoUcreti, String yurtici, String yurtdısı, String kargoDurumu) {
 
         this.tarih = tarih;
-        this.satisDurumu = satisDurumu;
         this.Tamamlandı = tamamlandı;
         this.krediCart = krediCart;
         this.kapıdaOdeme = kapıdaOdeme;
@@ -73,20 +75,12 @@ public class Sepet <T>{
     }
 
 
-    public String getTarih() {
+    public LocalDateTime getTarih() {
         return tarih;
     }
 
     public void setTarih(String tarih) {
-        this.tarih = tarih;
-    }
-
-    public String getSatisDurumu() {
-        return satisDurumu;
-    }
-
-    public void setSatisDurumu(String satisDurumu) {
-        this.satisDurumu = satisDurumu;
+        this.tarih = LocalDateTime.now();
     }
 
     public String getTamamlandı() {
@@ -174,7 +168,6 @@ public class Sepet <T>{
         return "Sepet{" +
                 ", products=" + products +
                 ", tarih='" + tarih + '\'' +
-                ", satisDurumu='" + satisDurumu + '\'' +
                 ", Tamamlandı='" + Tamamlandı + '\'' +
                 ", krediCart='" + krediCart + '\'' +
                 ", kapıdaOdeme='" + kapıdaOdeme + '\'' +
